@@ -6,8 +6,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Calendar, MapPin, ChevronRight, Users, Award, BookOpen, Code, Cloud, Laptop } from 'lucide-react';
+import { Calendar, MapPin, ChevronRight, Users, Award, BookOpen, Code, Cloud, Laptop, Clock, Video } from 'lucide-react';
 import { useAuth, useUser } from "@clerk/nextjs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -46,6 +48,166 @@ const clubs = [
   }
 ];
 
+// Enhanced EventCard Component
+function EventCard({ event }) {
+  const [showJitsi, setShowJitsi] = useState(false);
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "upcoming":
+        return (
+          <Badge variant="outline" className="border-purple-500 text-purple-500">
+            Upcoming
+          </Badge>
+        );
+      case "completed":
+        return (
+          <Badge variant="outline" className="border-green-500 text-green-500">
+            Completed
+          </Badge>
+        );
+      case "cancelled":
+        return (
+          <Badge variant="outline" className="border-red-500 text-red-500">
+            Cancelled
+          </Badge>
+        );
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
+
+  const joinMeeting = () => {
+    setShowJitsi(true);
+  };
+
+  const closeMeeting = () => {
+    setShowJitsi(false);
+  };
+
+  return (
+    <Card className="transform transition-all duration-300 hover:translate-y-1 hover:shadow-lg bg-white/90 backdrop-blur">
+      {/* Event Image */}
+      <div className="w-full h-48 overflow-hidden rounded-t-lg">
+        <img 
+          src={event.imageUrl} 
+          alt={event.title} 
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        />
+      </div>
+      
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg font-medium">{event.title}</CardTitle>
+          {getStatusBadge(event.status)}
+        </div>
+      </CardHeader>
+      
+      <CardContent>
+        <p className="mb-4 text-sm text-gray-600">{event.description}</p>
+        <div className="space-y-2.5 text-sm">
+          <div className="flex items-center text-gray-500">
+            <Calendar className="mr-2 h-4 w-4 text-purple-500" />
+            <span>Date: {event.date}</span>
+          </div>
+          <div className="flex items-center text-gray-500">
+            <Clock className="mr-2 h-4 w-4 text-purple-500" />
+            <span>Start Time: {event.startTime}</span>
+          </div>
+          <div className="flex items-center text-gray-500">
+            <MapPin className="mr-2 h-4 w-4 text-purple-500" />
+            <span>Location: {event.location}</span>
+          </div>
+          
+          {event.status === "upcoming" && !showJitsi && (
+            <div className="pt-3">
+              <Link 
+                href={`/events/${event.id}`} 
+                className="inline-flex items-center text-purple-600 text-sm font-medium hover:text-purple-700"
+              >
+                View details <ChevronRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// Sample event data (to replace API call)
+const sampleEvents = [
+  {
+    id: "event-1",
+    title: "IEEE Technical Workshop",
+    description: "Join us for an intensive workshop on artificial intelligence and machine learning fundamentals.",
+    date: "March 25, 2025",
+    startTime: "10:00 AM IST",
+    location: "Medicaps Campus, Lab 302",
+    status: "upcoming",
+    imageUrl: "/one.jpg",
+    club: { name: "IEEE" }
+  },
+  {
+    id: "event-2",
+    title: "Cloud Computing Seminar",
+    description: "Learn about modern cloud architectures and deployment strategies from industry experts.",
+    date: "March 28, 2025",
+    startTime: "2:30 PM IST",
+    location: "Virtual Event",
+    status: "upcoming",
+    imageUrl: "/two.jpg",
+    club: { name: "AWS" }
+  },
+  {
+    id: "event-3",
+    title: "Hackathon 2025",
+    description: "72-hour coding competition to solve real-world problems using technology.",
+    date: "April 5, 2025",
+    startTime: "9:00 AM IST",
+    location: "Medicaps Innovation Hub",
+    status: "upcoming",
+    imageUrl: "/one.jpg",
+    club: { name: "GDG" }
+  },
+  {
+    id: "event-4",
+    title: "Networking Night",
+    description: "Connect with industry professionals and alumni to expand your professional network.",
+    date: "April 12, 2025",
+    startTime: "6:00 PM IST",
+    location: "Medicaps Auditorium",
+    status: "upcoming",
+    imageUrl: "/two.jpg",
+    club: { name: "STIC" }
+  },
+  {
+    id: "event-5",
+    title: "Web Development Bootcamp",
+    description: "Intensive 2-day bootcamp covering modern web development technologies and frameworks.",
+    date: "April 15, 2025",
+    startTime: "10:00 AM IST",
+    location: "Computer Lab, Block B",
+    status: "upcoming",
+    imageUrl: "/one.jpg",
+    club: { name: "ACM" }
+  },
+  {
+    id: "event-6",
+    title: "Tech Talk: Future of AI",
+    description: "Industry experts discuss the future implications of artificial intelligence on society and technology.",
+    date: "April 20, 2025",
+    startTime: "4:00 PM IST",
+    location: "Medicaps Seminar Hall",
+    status: "upcoming",
+    imageUrl: "/two.jpg",
+    club: { name: "IEEE" }
+  }
+];
+
+// Define featured events
+const featuredEventIds = ["event-1", "event-3", "event-6"];
+
 export default function Home() {
   const [events, setEvents] = useState([]);
   const [featuredEvents, setFeaturedEvents] = useState([]);
@@ -54,25 +216,16 @@ export default function Home() {
   const { user } = useUser();
   const router = useRouter();
   
-  // Fetch events data
+  // Set event data (replacing API fetch)
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('/api/events?upcoming=true&limit=6');
-        const data = await response.json();
-        
-        if (data.success) {
-          setEvents(data.events || []);
-          setFeaturedEvents(data.featuredEvents || []);
-        }
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Simulate loading delay
+    const timer = setTimeout(() => {
+      setEvents(sampleEvents);
+      setFeaturedEvents(sampleEvents.filter(event => featuredEventIds.includes(event.id)));
+      setLoading(false);
+    }, 800);
     
-    fetchEvents();
+    return () => clearTimeout(timer);
   }, []);
   
   // GSAP animations
@@ -105,15 +258,6 @@ export default function Home() {
     
     return () => ScrollTrigger.getAll().forEach(trigger => trigger.kill());
   }, []);
-  
-  // Format date for events
-  const formatEventDate = (dateString : any) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric'
-    });
-  };
   
   return (
     <main className="min-h-screen bg-white">
@@ -210,7 +354,7 @@ export default function Home() {
         </div>
       </section>
       
-      {/* Events Section */}
+      {/* Enhanced Events Section */}
       <section id="events" className="py-16 bg-purple-50">
         <div className="container mx-auto px-4 events-section">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
@@ -224,47 +368,14 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {events.length > 0 ? (
-                events.map((event : any) => (
-                  <div 
-                    key={event._id} 
-                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all transform hover:-translate-y-1"
-                  >
-                    <div className="relative h-40">
-                      <Image 
-                        src={event.coverImage || "/placeholder.svg?height=300&width=500"} 
-                        alt={event.title}
-                        fill
-                        className="object-cover"
-                      />
-                      {featuredEvents.some( (fe : any)=> fe._id === event._id) && (
-                        <div className="absolute top-3 left-3 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                          Featured
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-5">
-                      <div className="flex items-center text-sm text-gray-500 mb-2">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        <span>{formatEventDate(event.startDate)}</span>
-                        {event.club && (
-                          <>
-                            <div className="mx-2 w-1 h-1 bg-gray-300 rounded-full"></div>
-                            <span>{event.club.name}</span>
-                          </>
-                        )}
+                events.map((event) => (
+                  <div key={event.id} className="relative">
+                    {featuredEvents.some(fe => fe.id === event.id) && (
+                      <div className="absolute top-3 left-3 z-10 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                        Featured
                       </div>
-                      <h4 className="text-lg font-bold text-gray-900 mb-2">{event.title}</h4>
-                      <div className="flex items-center text-sm text-gray-500 mb-3">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        <span>{event.venue || "Medicaps Campus"}</span>
-                      </div>
-                      <Link 
-                        href={`/events/${event._id}`} 
-                        className="inline-flex items-center text-purple-600 text-sm font-medium hover:text-purple-700"
-                      >
-                        View details <ChevronRight className="w-4 h-4 ml-1" />
-                      </Link>
-                    </div>
+                    )}
+                    <EventCard event={event} />
                   </div>
                 ))
               ) : (
@@ -335,10 +446,11 @@ export default function Home() {
             <div className="relative">
               <div className="relative z-10 rounded-xl overflow-hidden shadow-xl">
                 <Image 
-                  src="/placeholder.svg?height=600&width=800" 
+                  src="/collage.jpg" 
                   alt="Medicaps Campus"
-                  width={800}
-                  height={600}
+                  width={400}
+                  height={300}
+                  objectFit="cover"
                   className="w-full h-auto"
                 />
               </div>
