@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { LeaderNavbar } from "@/components/leader-navbar"
 import { TaskCard } from "@/components/task-card"
-import { EventCard } from "@/components/event-card"
+import { EventCardOne , EventCardTwo } from "@/components/event-card"
 
 // Mock data for the club leader dashboard
 const clubData = {
@@ -435,9 +435,8 @@ export default function LeaderDashboard() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {club.events.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
+            <EventCardOne />
+            <EventCardTwo />
           </div>
          
         </div>
