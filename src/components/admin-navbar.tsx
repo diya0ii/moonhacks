@@ -52,7 +52,7 @@ export function AdminNavbar() {
               href="/admin/settings"
               className="text-sm font-medium text-gray-500 transition-colors hover:text-primary"
             >
-              Settings
+              
             </Link>
           </nav>
         </div>
