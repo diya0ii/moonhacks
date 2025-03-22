@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminMiddleware, withRBAC } from '@/app/lib/middleware';
 import connectDB from '@/app/lib/db';
-import { Event, Club } from '@/app/model';
+import { Event, Club } from '@/model/index';
 import mongoose from 'mongoose';
 
 async function handler(req: NextRequest) {

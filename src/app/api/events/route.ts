@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authMiddleware, withRBAC } from '@/app/lib/middleware';
 import connectDB from '@/app/lib/db';
 import { getCurrentUserId } from '@/app/lib/clerk';
-import { Event, Club } from '@/app/model';
+import { Event, Club } from '@/model/index';
 import mongoose from 'mongoose';
 
 async function handler(req: NextRequest) {

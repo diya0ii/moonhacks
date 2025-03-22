@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminMiddleware, withRBAC } from "@/app/lib/middleware";
 import connectDB from "@/app/lib/db";
 import { getCurrentUserId } from "@/app/lib/clerk";
-import { Club, User } from "@/app/model";
+import { Club, User } from "@/model/index";
 import { createClerkClient } from "@clerk/clerk-sdk-node";
 
 // Initialize Clerk Server API Client

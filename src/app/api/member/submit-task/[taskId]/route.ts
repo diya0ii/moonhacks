@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { memberMiddleware, withRBAC } from '@/app/lib/middleware';
 import connectDB from '@/app/lib/db';
 import { getCurrentUserId } from '@/app/lib/clerk';
-import { Task, User, Progress } from '@/app/model';
+import { Task, User, Progress } from '@/model/index';
 import { calculateCredits } from '@/app/lib/groq';
 import mongoose from 'mongoose';
 

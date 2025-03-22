@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { memberMiddleware, withRBAC } from '@/app/lib/middleware';
 import connectDB from '@/app/lib/db';
 import { getCurrentUserId } from '@/app/lib/clerk';
-import { Task, Club } from '@/app/model';
+import { Task, Club } from '@/model/index';
 
 async function handler(req: NextRequest) {
   // Connect to the database

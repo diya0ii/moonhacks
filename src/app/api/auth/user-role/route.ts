@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/app/lib/clerk';
 import { authMiddleware, withRBAC } from '@/app/lib/middleware';
 import connectDB from '@/app/lib/db';
-import { User } from '@/app/model';
+import { User } from '@/model/index';
 
 // Handler to get the authenticated user's role and info
 async function handler(req: NextRequest) {
