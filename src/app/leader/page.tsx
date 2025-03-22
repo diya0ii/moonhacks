@@ -4,6 +4,9 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Calendar, Clock, PlusCircle, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
+// import EventChatbotPopup from '@/components/EventChatbotPopup';
+import EventChatbotPopup from "@/components/ui/EventChatbotPopup"
+import { MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
@@ -85,6 +88,8 @@ const clubData = {
 
 export default function LeaderDashboard() {
   const router = useRouter()
+  const [showChatbot, setShowChatbot] = useState(false);
+
   const [club, setClub] = useState(clubData)
   const [isAddTaskDialogOpen, setIsAddTaskDialogOpen] = useState(false)
   const [isAddEventDialogOpen, setIsAddEventDialogOpen] = useState(false)
@@ -176,16 +181,52 @@ export default function LeaderDashboard() {
       tasks: updatedTasks,
     })
   }
+  const LeaderDashboard = () => {
+    const [showChatbot, setShowChatbot] = useState(false);
+    
+    return (
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-6">Lead Dashboard</h1>
+        
+        {/* Your existing dashboard content */}
+        
+        {/* Add a button to open the chatbot */}
+        <Button 
+          onClick={() => setShowChatbot(true)}
+          className="flex items-center gap-2"
+        >
+          <MessageSquare size={16} />
+          Event Planning Assistant
+        </Button>
+
+     
+        
+        {/* Add the chatbot popup component with visibility control */}
+        {showChatbot && (
+          <EventChatbotPopup onClose={() => setShowChatbot(false)} />
+        )}
+      </div>
+    );
+  };
+  
+  
 
   return (
     <div className="min-h-screen bg-gray-50">
       <LeaderNavbar clubName={club.name} />
 
       <main className="container mx-auto p-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">{club.name} Dashboard</h1>
-          <p className="text-gray-600">Manage your club, members, tasks, and events</p>
+        <div className="mb-8 flex">
+          <h1 className="text-3xl font-bold text-gray-900">{club.name} Dashboard </h1>
+          <Button 
+        onClick={() => setShowChatbot(true)} 
+        className="flex items-center gap-2 ml-10 mb-20"
+      >
+        <MessageSquare size={16} />
+        Event Planning Assistant
+      </Button> 
         </div>
+          <p className="text-gray-600">Manage your club, members, tasks, and events</p>
 
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
           <Card>
@@ -398,9 +439,25 @@ export default function LeaderDashboard() {
               <EventCard key={event.id} event={event} />
             ))}
           </div>
+         
         </div>
+    
+    
       </main>
+
+     
+     
+      
+      <EventChatbotPopup 
+        isFloating={false} 
+        isOpen={showChatbot} 
+        onClose={() => setShowChatbot(false)} 
+      />
+     
+      
     </div>
+
+
   )
 }
 
