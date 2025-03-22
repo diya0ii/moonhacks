@@ -165,7 +165,7 @@ export default function Home() {
               Explore Clubs
             </Link>
             <Link 
-              href="#events" 
+              href="/events" 
               className="px-8 py-3 bg-white text-purple-600 border border-purple-200 rounded-full font-medium hover:bg-purple-50 transition-colors"
             >
               Events
