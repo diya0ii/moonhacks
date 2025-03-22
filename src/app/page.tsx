@@ -107,7 +107,7 @@ export default function Home() {
   }, []);
   
   // Format date for events
-  const formatEventDate = (dateString) => {
+  const formatEventDate = (dateString : any) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
       month: 'short', 
@@ -224,7 +224,7 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {events.length > 0 ? (
-                events.map((event) => (
+                events.map((event : any) => (
                   <div 
                     key={event._id} 
                     className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all transform hover:-translate-y-1"
@@ -236,7 +236,7 @@ export default function Home() {
                         fill
                         className="object-cover"
                       />
-                      {featuredEvents.some(fe => fe._id === event._id) && (
+                      {featuredEvents.some( (fe : any)=> fe._id === event._id) && (
                         <div className="absolute top-3 left-3 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
                           Featured
                         </div>

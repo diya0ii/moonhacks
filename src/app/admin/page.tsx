@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import AnalyticsSidebar from "@/components/AnalyticsSidebar";
 import {
   Dialog,
   DialogContent,
@@ -46,13 +47,14 @@ export default function AdminDashboard() {
   const [newClub, setNewClub] = useState({ name: "", description: "", leader: "" })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [error, setError] = useState("")
-
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const handleCreateClub = () => {
     // Validate inputs
     if (!newClub.name || !newClub.description || !newClub.leader) {
       setError("All fields are required")
       return
     }
+    
 
     // Check for duplicate club names
     if (clubs.some((club) => club.name.toLowerCase() === newClub.name.toLowerCase())) {
@@ -222,6 +224,20 @@ export default function AdminDashboard() {
             </div>
           )}
         </div>
+        <div className="relative min-h-screen flex items-start bg-gray-100">
+      {/* Dashboard Content */}
+      <div className="p-6">
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-md"
+        >
+          View Analytics
+        </button>
+      </div>
+
+      {/* Sidebar */}
+      <AnalyticsSidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+    </div>
       </main>
     </div>
   )
